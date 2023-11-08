@@ -53,14 +53,14 @@ function Frame({ uid, url, scale, color, focus, ...props }) {
     let tp = props.position
     if (isFocus || hovered) {
       const val = isFocus? 0.5 : 0.3
-      easing.damp3(gpRef.current.position, [tp[0], tp[1]+val, tp[2]], 0.2*gr, dt, undefined, )
+      easing.damp3((gpRef.current as any).position, [tp[0], tp[1]+val, tp[2]], 0.2*gr, dt, undefined, )
     } else {
-      easing.damp3(gpRef.current.position, tp, 0.15, dt, undefined, )
+      easing.damp3((gpRef.current as any).position, tp, 0.15, dt, undefined, )
     }
     if (isFocus) {
-      easing.damp3(meshRef.current.scale, [2.1*gr, 2.1, 0.2], 0.3, dt, undefined, )
+      easing.damp3((meshRef.current as any).scale, [2.1*gr, 2.1, 0.2], 0.3, dt, undefined, )
     } else {
-      easing.damp3(meshRef.current.scale, scale, 0.2, dt, undefined, )
+      easing.damp3((meshRef.current as any).scale, scale, 0.2, dt, undefined, )
     }
     console.log(scale)
   })
@@ -103,10 +103,14 @@ function Frames({ images }) {
   let q = new THREE.Quaternion()
   let p = new THREE.Vector3()
   useEffect(() => {
+    // @ts-ignore
     clicked.current = ref.current.getObjectByName(focus)
     if (clicked.current) {
+      // @ts-ignore
       clicked.current.parent.updateWorldMatrix(true, true)
+      // @ts-ignore
       clicked.current.parent.localToWorld(p.set(0, 0, 5.25))
+      // @ts-ignore
       clicked.current.parent.getWorldQuaternion(q)
     }
   })
