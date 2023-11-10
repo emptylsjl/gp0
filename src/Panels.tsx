@@ -72,7 +72,7 @@ function List({ children, open }) {
 }
 
 const Panel = styled.div`
-  position: absolute;
+  position: fixed;
   top: -850px;
   left: -1375px;
   width: 2775px;
@@ -126,7 +126,7 @@ export function Intro({ focused }) {
           "\n        Multi Image Codec\n  Introduction/Comparison"
         }
       </Text>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             <h2 trans="550px 950px">Larry Lin  </h2>
@@ -206,7 +206,7 @@ export function Something({ focused }) {
           "Others"
         }
       </Text>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             <div trans="950px 350px">
@@ -272,7 +272,7 @@ export function JpegXl({ focused }) {
           {"Jpeg-xl"}
         </Text>
       </group>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             {/*<h2 trans="550px 950px">Larry Lin  </h2>*/}
@@ -328,7 +328,7 @@ export function Lossless({ focused }) {
         {/*  {"Jpeg-xl"}*/}
         {/*</Text>*/}
       </group>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             {/*<h2 trans="550px 950px">Larry Lin  </h2>*/}
@@ -397,7 +397,7 @@ export function VfxAsset({ focused }) {
           {"Exr   Hdr"}
         </Text>
       </group>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             {/*<h2 trans="550px 950px">Larry Lin  </h2>*/}
@@ -472,7 +472,7 @@ export function Textures({ focused }) {
           {"BCn             Astc"}
         </Text>
       </group>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             {/*<h2 trans="550px 950px">Larry Lin  </h2>*/}
@@ -548,7 +548,7 @@ export function Lossy({ focused }) {
         {/*  {"Jpeg-xl"}*/}
         {/*</Text>*/}
       </group>
-      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} >
+      <Html style={{ color: "#ddd", fontSize: "2em" }} transform scale={0.05} position={[0, -0.25, 0]}>
         <Panel>
           <List open={focused} >
             {/*<h2 trans="550px 950px">Larry Lin  </h2>*/}
