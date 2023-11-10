@@ -105,14 +105,14 @@ function Gd() {
 
 
 const ToggleButton = styled('button')`
-  width: 20px;
+  width: 80px;
   height: 20px;
   background-color: antiquewhite;
 `
 
 const Overlay = styled('div')`
   position: fixed;
-  top: 0;
+  top: 5%;
   left: 0;
   width: 100px;
   height: 200px;
@@ -120,10 +120,11 @@ const Overlay = styled('div')`
   border: #848484;
 `
 
-export function OptionOverlay({ isCamera, setIsCamera }) {
+export function OptionOverlay({ isCamera, setIsCamera, isPdf, setIsPdf }) {
   return(
     <Overlay>
-      <ToggleButton onClick={() => setIsCamera(!isCamera)}/>
+      <ToggleButton onClick={() => setIsPdf(!isPdf)}>show pdf</ToggleButton>
+      <ToggleButton onClick={() => setIsCamera(!isCamera)}>cam</ToggleButton>
     </Overlay>
   )
 }

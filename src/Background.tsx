@@ -168,6 +168,7 @@ export function Background() {
 
   const [focus, setFocus] = useState(undefined)
   const [isCamera, setIsCamera] = useState(false)
+  const [isPdf, setIsPdf] = useState(true)
 
   console.log(focus)
 
@@ -217,12 +218,20 @@ export function Background() {
     },
   ]
 
+  const pdfRef = useRef();
+
+  // useFrame((state, dt) => {
+  //     // easing.damp3((ref.current as any).scale, [0.5, 0.5, 0.5], 0.25*gr, dt, undefined, )
+  // })
+
   return (
     <>
-      <object data="/461gp.pdf" type="application/pdf" width="100%" height="85%">
-        <p>Alternative text - include a link <a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a></p>
-      </object>
-      <Canvas dpr={[1, 1.5]} shadows camera={{ position: [-15, 8, -15], fov: 26 }}>
+      <Canvas
+        dpr={[1, 1.5]}
+        shadows
+        camera={{ position: [-15, 8, -15], fov: 26 }}
+        onClick={() => setIsPdf(false)}
+      >
         <fog attach="fog" args={['#D2B48C', 20, 23]} />
         <ambientLight intensity={15} />
         <pointLight position={[10, 10, 10]} intensity={1} castShadow />
@@ -240,7 +249,21 @@ export function Background() {
         </EffectComposer>
         <DebugOverlay />
       </Canvas>
-      <OptionOverlay {...{isCamera, setIsCamera}}/>
+      <PDFDiv ref={pdfRef} style={{height: (isPdf? "90%" : "0")}}>
+        <object data="/461gp.pdf" type="application/pdf" width="100%" height="100%">
+          <p>Alternative link if pdf did not render: <a href="/461gp.pdf">PDF</a></p>
+        </object>
+      </PDFDiv>
+      <OptionOverlay {...{isCamera, setIsCamera, isPdf, setIsPdf}}/>
     </>
   )
 }
+
+
+
+const PDFDiv = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+`
