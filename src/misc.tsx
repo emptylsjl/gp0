@@ -102,3 +102,28 @@ function Gd() {
     </mesh>
   )
 }
+
+
+const ToggleButton = styled('button')`
+  width: 20px;
+  height: 20px;
+  background-color: antiquewhite;
+`
+
+const Overlay = styled('div')`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 200px;
+  //background-color: antiquewhite;
+  border: #848484;
+`
+
+export function OptionOverlay({ isCamera, setIsCamera }) {
+  return(
+    <Overlay>
+      <ToggleButton onClick={() => setIsCamera(!isCamera)}/>
+    </Overlay>
+  )
+}

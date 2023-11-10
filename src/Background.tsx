@@ -16,8 +16,9 @@ import { LayerMaterial, Depth, Fresnel } from 'lamina'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
 import { useRoute, useLocation } from 'wouter'
-import {DebugOverlay} from "./misc.tsx";
+import {DebugOverlay, OptionOverlay} from "./misc.tsx";
 import {Camera} from "three";
+import {Intro, JpegXl, Lossless, Lossy, Something, Textures, VfxAsset} from "./Panels.tsx";
 
 extend({ WaterPass, GlitchPass })
 
@@ -42,7 +43,7 @@ const config = {
   color: '#8d7f69',
 }
 
-function Frame({ uid, url, scale, color, focus, ...props }) {
+function Frame({ uid, scale, color, focus, setFocus, panel, ...props }) {
   const image = useRef()
   const gpRef = useRef()
   const meshRef = useRef()
@@ -62,7 +63,6 @@ function Frame({ uid, url, scale, color, focus, ...props }) {
     } else {
       easing.damp3((meshRef.current as any).scale, scale, 0.2, dt, undefined, )
     }
-    console.log(scale)
   })
 
   useCursor(hovered && !isFocus)
@@ -82,12 +82,8 @@ function Frame({ uid, url, scale, color, focus, ...props }) {
         <meshStandardMaterial color="#111" metalness={0.1} roughness={0.7} envMapIntensity={0.1} />
         {/*<meshBasicMaterial color="#333" toneMapped={false} fog={false} />*/}
         <Edges color="silver" />
-        <Image name={uid} ref={image} position={[0, 0, 0.51]} scale={[0.8, 0.8]} url={url} />
-
       </mesh>
-      <Text maxWidth={0.1} color="#fff" anchorX="left" anchorY="top" position={[0.3, 1, 0.15]} fontSize={0.25}>
-        {uid}
-      </Text>
+      {panel}
       {/*</PivotControls>*/}
     </group>
   )
@@ -95,10 +91,10 @@ function Frame({ uid, url, scale, color, focus, ...props }) {
 
 const gr = 1.61803398875
 const clone = new THREE.PerspectiveCamera()
-function Frames({ images }) {
+
+function ImageBlocks({ images, focus, setFocus, isCamera }) {
   const ref = useRef()
   const clicked = useRef()
-  const [focus, setFocus] = useState(undefined)
 
   let q = new THREE.Quaternion()
   let p = new THREE.Vector3()
@@ -116,16 +112,17 @@ function Frames({ images }) {
   })
 
   useFrame((state, dt) => {
-    if (focus) {
-      easing.damp3(state.camera.position, p, 0.5, dt)
-      easing.dampQ(state.camera.quaternion, q, 0.5, dt)
-    } else {
-      const time = state.clock.elapsedTime
-      easing.damp3(clone.position, [14*Math.sin(time*0.03), 10, 14*Math.cos(time*0.03)], 1, dt)
-      // clone.position.set(10.4*Math.sin(time*0.1), 8.5, 10.4*Math.cos(time*0.1))
-      clone.lookAt(0,0,0)
-      easing.damp3(state.camera.position, clone.position, 1, dt)
-      easing.dampQ(state.camera.quaternion, clone.quaternion, 1, dt)
+    if (!isCamera) {
+      if (focus) {
+        easing.damp3(state.camera.position, p, 0.5, dt)
+        easing.dampQ(state.camera.quaternion, q, 0.5, dt)
+      } else {
+        const time = state.clock.elapsedTime
+        easing.damp3(clone.position, [14 * Math.sin(time * 0.03), 10, 14 * Math.cos(time * 0.03)], 1, dt)
+        clone.lookAt(0, 0, 0)
+        easing.damp3(state.camera.position, clone.position, 1, dt)
+        easing.dampQ(state.camera.quaternion, clone.quaternion, 1, dt)
+      }
     }
   })
 
@@ -133,7 +130,7 @@ function Frames({ images }) {
     <group
       ref={ref}
       position={[0, -0.5, 0]}
-      onClick={(e) => (e.stopPropagation(), setFocus(e.object.name))}
+      onClick={(e) => (setFocus(e.object.name))}
       onPointerMissed={() => setFocus(undefined)}>
       {images.map((props) => <Frame key={props.uid} focus={focus} {...props} /> /* prettier-ignore */)}
     </group>
@@ -160,7 +157,7 @@ const Grid2 = ({ number = 11, lineWidth = 0.02, height = 0.3 }) => (
         ))
       )}
       {/*<gridHelper args={[8, 8, '#BFB29E', '#D6C7AE']} position={[0, 0.05, 0]} scale={2}/>*/}
-      <Grid args={[8, 8]} position={[0, 0.02, 0]} scale={2} sectionColor={"#BFB29E"} cellColor={"#D6C7AE"} fadeDistance={17.5} fadeStrength={0.3}/>
+      <Grid args={[8, 8]} position={[0, 0.02, 0]} scale={2} sectionColor={"#BFB29E"} cellColor={"#D6C7AE"} fadeDistance={18.25} fadeStrength={0.9}/>
     </Instances>
   </>
 )
@@ -169,73 +166,81 @@ const pi = Math.PI
 
 export function Background() {
 
+  const [focus, setFocus] = useState(undefined)
+  const [isCamera, setIsCamera] = useState(false)
+
+  console.log(focus)
+
   const images = [
     {
-      uid: "bcn_astc",
+      uid: "textures",
       rotation: [pi/-2, 0, 0],
       position: [2, -1, 1],
       scale: [2, gr, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <Textures focused={focus==="textures"}/>,
     },
-    { uid: "webp_jpg_jpg2000",
+    { uid: "Lossy",
       rotation: [pi/-2, 0, pi/2],
       position: [-2, -1, 2],
       scale: [3, gr, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <Lossy focused={focus==="Lossy"}/>,
     },
-    { uid: "png_qoi_avif_heif",
+    { uid: "lossless",
       rotation: [pi/-2, 0, pi],
       position: [-1, -1, -1],
       scale: [4, gr, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <Lossless focused={focus==="lossless"}/>,
     },
     { uid: "jxl",
       rotation: [pi/-2, 0, 0],
       position: [0, -1, 1],
       scale: [gr, 1, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <JpegXl focused={focus==="jxl"}/>,
     },
-    { uid: "exr_hdr_tiff",
+    { uid: "vfxAsset",
       rotation: [pi/-2, 0, pi/-2],
       position: [2, -1, -2],
       scale: [3, gr, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <VfxAsset focused={focus==="vfxAsset"}/>,
     },
     { uid: "intro",
       rotation: [pi/-2, 0, 0],
       position: [-1, -1, -3],
       scale: [3, 2, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <Intro focused={focus==="intro"}/>,
     },
     { uid: "something",
       rotation: [pi/-2, 0, pi],
       position: [1, -1, 3],
       scale: [3, 2, 0.2],
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+      panel: <Something focused={focus==="something"}/>,
     },
   ]
 
   return (
-    // <Canvas camera={{ fov: 70, position: [0, 2, 15] }}>
-    <Canvas dpr={[1, 1.5]} shadows camera={{ position: [-15, 8, -15], fov: 26 }}>
-      <fog attach="fog" args={['#D2B48C', 20, 23]} />
-      <ambientLight intensity={15} />
-      <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-      <Grid2/>
-      <Frames images={images} />
+    <>
+      <object data="/461gp.pdf" type="application/pdf" width="100%" height="85%">
+        <p>Alternative text - include a link <a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a></p>
+      </object>
+      <Canvas dpr={[1, 1.5]} shadows camera={{ position: [-15, 8, -15], fov: 26 }}>
+        <fog attach="fog" args={['#D2B48C', 20, 23]} />
+        <ambientLight intensity={15} />
+        <pointLight position={[10, 10, 10]} intensity={1} castShadow />
+        <Grid2/>
+        <ImageBlocks {...{images, focus, setFocus, isCamera}}/>
 
-      {/*<CameraControls makeDefault minZoom={50} dollyToCursor/>*/}
-      {/*<Input scale={2} position={[0.4, 0.25, -1]} />*/}
-      {/*<Gd/>*/}
-      <Environment background preset="night" blur={0.7}/>
-      <EffectComposer>
-        <Bloom mipmapBlur intensity={1} opacity={0.3} luminanceThreshold={0.5}/>
-        <DepthOfField target={[0, 0, -2.5]} bokehScale={0.9}/>
-        <Vignette eskil={false} offset={0.22} darkness={0.7} />
-      </EffectComposer>
-
-      <DebugOverlay />
-      {/*<Postpro />*/}
-    </Canvas>
+        {isCamera && <CameraControls makeDefault minZoom={50} dollyToCursor/>}
+        {/*<Input scale={2} position={[0.4, 0.25, -1]} />*/}
+        {/*<Gd/>*/}
+        <Environment background preset="night" blur={0.7}/>
+        <EffectComposer>
+          <Bloom mipmapBlur intensity={1} opacity={0.3} luminanceThreshold={0.5}/>
+          <DepthOfField target={[0, 0, -2.5]} bokehScale={0.9}/>
+          <Vignette eskil={false} offset={0.22} darkness={0.7} />
+        </EffectComposer>
+        <DebugOverlay />
+      </Canvas>
+      <OptionOverlay {...{isCamera, setIsCamera}}/>
+    </>
   )
 }
