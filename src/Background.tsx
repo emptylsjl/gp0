@@ -243,7 +243,7 @@ export function Background() {
 
   return (
     <PageDiv>
-      <PDFDiv ref={pdfRef} style={{height: (isPdf? "95%" : "0")}}>
+      <PDFDiv ref={pdfRef} style={{height: (isPdf? "90%" : "0")}}>
         <object id="wa" data="/461gp.pdf" type="application/pdf" width="100%" height="100%">
           <p>Alternative link if pdf did not render: <a href="/461gp.pdf">PDF</a></p>
         </object>
