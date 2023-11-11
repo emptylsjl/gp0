@@ -123,8 +123,8 @@ const Overlay = styled('div')`
 export function OptionOverlay({ isCamera, setIsCamera, isPdf, setIsPdf }) {
   return(
     <Overlay>
-      <ToggleButton onClick={() => setIsPdf(!isPdf)}>show pdf</ToggleButton>
-      <ToggleButton onClick={() => setIsCamera(!isCamera)}>cam</ToggleButton>
+      <ToggleButton onClick={() => setIsPdf(!isPdf)}>toggle pdf</ToggleButton>
+      <ToggleButton onClick={() => setIsCamera(!isCamera)}>cam ctrl</ToggleButton>
     </Overlay>
   )
 }

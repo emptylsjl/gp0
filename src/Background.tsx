@@ -224,13 +224,36 @@ export function Background() {
   //     // easing.damp3((ref.current as any).scale, [0.5, 0.5, 0.5], 0.25*gr, dt, undefined, )
   // })
 
+  function ah(e) {
+    if (window.scrollY/window.innerHeight > 0.65) {
+      setIsPdf(false)
+    }
+  }
+
+  useEffect(() => {
+    // let a = document.getElementById("wa").contentDocument
+    document.addEventListener("scroll", ah)
+
+    return () => {window.removeEventListener("scroll", ah);};
+  }, [])
+
+  useEffect(() => {
+    setFocus(undefined)
+  }, [isPdf])
+
   return (
-    <>
+    <PageDiv>
+      <PDFDiv ref={pdfRef} style={{height: (isPdf? "95%" : "0")}}>
+        <object id="wa" data="/461gp.pdf" type="application/pdf" width="100%" height="100%">
+          <p>Alternative link if pdf did not render: <a href="/461gp.pdf">PDF</a></p>
+        </object>
+      </PDFDiv>
       <Canvas
         dpr={[1, 1.5]}
         shadows
         camera={{ position: [-15, 8, -15], fov: 26 }}
-        onClick={() => setIsPdf(false)}
+        // onClick={() => setIsPdf(false)}
+        style={{position: "absolute"}}
       >
         <fog attach="fog" args={['#D2B48C', 20, 23]} />
         <ambientLight intensity={15} />
@@ -249,21 +272,27 @@ export function Background() {
         </EffectComposer>
         <DebugOverlay />
       </Canvas>
-      <PDFDiv ref={pdfRef} style={{height: (isPdf? "90%" : "0")}}>
-        <object data="/461gp.pdf" type="application/pdf" width="100%" height="100%">
-          <p>Alternative link if pdf did not render: <a href="/461gp.pdf">PDF</a></p>
-        </object>
-      </PDFDiv>
       <OptionOverlay {...{isCamera, setIsCamera, isPdf, setIsPdf}}/>
-    </>
+    </PageDiv>
   )
 }
 
 
-
-const PDFDiv = styled.div`
-  position: fixed;
+const PageDiv = styled.div`
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
+`
+
+
+
+const PDFDiv = styled.div`
+  //position: fixed;
+  //top: 0;
+  //left: 0;
+  width: 100%;
+  transition: height 0.6s;
+  transition-timing-function: ease-in-out;
 `
