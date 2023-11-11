@@ -218,11 +218,7 @@ export function Background() {
     },
   ]
 
-  const pdfRef = useRef();
-
-  // useFrame((state, dt) => {
-  //     // easing.damp3((ref.current as any).scale, [0.5, 0.5, 0.5], 0.25*gr, dt, undefined, )
-  // })
+  const pdfRef = useRef()
 
   function ah(e) {
     if (window.scrollY/window.innerHeight > 0.65) {

@@ -41,65 +41,12 @@ const BgBlurBox = styled(FCDiv)`
 export const DebugOverlay = () => {
   const { width } = useThree((s) => s.size)
   return (
-    /* This is it -> */
     <Perf
       minimal={width < 712}
       matrixUpdate
       deepAnalyze
       overClock
-      // customData={{
-      //   value: 60,
-      //   name: 'physic',
-      //   info: 'fps'
-      // }}
     />
-  )
-}
-
-function StageUh() {
-  return (
-    <>
-      <ambientLight intensity={5} />
-      <directionalLight
-        position={[1, 10, -2]}
-        intensity={1}
-        shadow-camera-far={70}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-        shadow-mapSize={[512, 512]}
-        castShadow
-      />
-      <directionalLight position={[-10, -10, 2]} intensity={3} />
-      <mesh receiveShadow rotation-x={-Math.PI / 2} position={[0, -1.85, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <shadowMaterial opacity={0.2} />
-      </mesh>
-      {/*<BakeShadows />*/}
-    </>
-  )
-}
-
-function Gd() {
-  return(
-    <mesh position={[0, 1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      {/* <planeGeometry args={[5, 5]} /> */}
-      <MeshReflectorMaterial
-        transparent={true}
-        opacity={0.5}
-        mirror={0.5}
-        blur={[400, 100]}
-        resolution={2048}
-        mixBlur={10}
-        mixStrength={15}
-        depthScale={0.1}
-        minDepthThreshold={0.1}
-        color="#222222"
-        metalness={0.5}
-        roughness={0.1}
-      />
-    </mesh>
   )
 }
 
