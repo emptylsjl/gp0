@@ -43,6 +43,10 @@ const config = {
   color: '#8d7f69',
 }
 
+function ad([v0, v1, v2], x, y, z): [number, number, number] {
+  return [v0+x, v1+y, v2+z]
+}
+
 function Frame({ uid, scale, color, focus, setFocus, panel, ...props }) {
   const image = useRef()
   const gpRef = useRef()
@@ -69,7 +73,6 @@ function Frame({ uid, scale, color, focus, setFocus, panel, ...props }) {
 
   return (
     <group {...props} ref={gpRef}>
-      {/*<PivotControls scale={1} activeAxes={[true, true, true]} offset={[0, 0, 0.3]}>*/}
       <mesh
         name={uid}
         scale={scale}
@@ -84,7 +87,6 @@ function Frame({ uid, scale, color, focus, setFocus, panel, ...props }) {
         <Edges color="silver" />
       </mesh>
       {panel}
-      {/*</PivotControls>*/}
     </group>
   )
 }
@@ -92,7 +94,7 @@ function Frame({ uid, scale, color, focus, setFocus, panel, ...props }) {
 const gr = 1.61803398875
 const clone = new THREE.PerspectiveCamera()
 
-function ImageBlocks({ images, focus, setFocus, isCamera }) {
+function ImageBlocks({ images, focus, setFocus, isCamera, isPivot }) {
   const ref = useRef()
   const clicked = useRef()
 
@@ -132,7 +134,13 @@ function ImageBlocks({ images, focus, setFocus, isCamera }) {
       position={[0, -0.5, 0]}
       onClick={(e) => (setFocus(e.object.name))}
       onPointerMissed={() => setFocus(undefined)}>
-      {images.map((props) => <Frame key={props.uid} focus={focus} {...props} /> /* prettier-ignore */)}
+      {images.map((props) => (isPivot ?
+        <PivotControls scale={0.5} activeAxes={[true, true, true]} offset={ad(props.position, 0.5, 0.7, 0.5)}>
+          <Frame key={props.uid} focus={focus} {...props} />
+        </PivotControls>
+        :
+        <Frame key={props.uid} focus={focus} {...props} />
+      ))}
     </group>
   )
 }
@@ -169,6 +177,7 @@ export function Background() {
   const [focus, setFocus] = useState(undefined)
   const [isCamera, setIsCamera] = useState(false)
   const [isPdf, setIsPdf] = useState(true)
+  const [isPivot, setIsPivot] = useState(false)
 
   console.log(focus)
 
@@ -255,7 +264,7 @@ export function Background() {
         <ambientLight intensity={15} />
         <pointLight position={[10, 10, 10]} intensity={1} castShadow />
         <Grid2/>
-        <ImageBlocks {...{images, focus, setFocus, isCamera}}/>
+        <ImageBlocks {...{images, focus, setFocus, isCamera, isPivot}}/>
 
         {isCamera && <CameraControls makeDefault minZoom={50} dollyToCursor/>}
         <Environment background preset="night" blur={0.7}/>
@@ -266,7 +275,7 @@ export function Background() {
         </EffectComposer>
         <DebugOverlay />
       </Canvas>
-      <OptionOverlay {...{isCamera, setIsCamera, isPdf, setIsPdf}}/>
+      <OptionOverlay {...{isCamera, setIsCamera, isPdf, setIsPdf, isPivot, setIsPivot}}/>
     </PageDiv>
   )
 }

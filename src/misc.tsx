@@ -67,11 +67,12 @@ const Overlay = styled('div')`
   border: #848484;
 `
 
-export function OptionOverlay({ isCamera, setIsCamera, isPdf, setIsPdf }) {
+export function OptionOverlay({ isCamera, setIsCamera, isPdf, setIsPdf, isPivot, setIsPivot }) {
   return(
     <Overlay>
       <ToggleButton onClick={() => setIsPdf(!isPdf)}>toggle pdf</ToggleButton>
       <ToggleButton onClick={() => setIsCamera(!isCamera)}>cam ctrl</ToggleButton>
+      <ToggleButton onClick={() => setIsPivot(!isPivot)}>pivot ctrl</ToggleButton>
     </Overlay>
   )
 }
