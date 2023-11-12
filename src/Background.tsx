@@ -221,7 +221,7 @@ export function Background() {
   const pdfRef = useRef()
 
   function ah(e) {
-    if (window.scrollY/window.innerHeight > 0.65) {
+    if (window.scrollY/window.innerHeight > 0.5) {
       setIsPdf(false)
     }
   }
@@ -239,7 +239,7 @@ export function Background() {
 
   return (
     <PageDiv>
-      <PDFDiv ref={pdfRef} style={{height: (isPdf? "90%" : "0")}}>
+      <PDFDiv ref={pdfRef} style={{height: (isPdf? "82%" : "0")}}>
         <object id="wa" data="/461gp.pdf" type="application/pdf" width="100%" height="100%">
           <p>Alternative link if pdf did not render: <a href="/461gp.pdf">PDF</a></p>
         </object>
@@ -258,8 +258,6 @@ export function Background() {
         <ImageBlocks {...{images, focus, setFocus, isCamera}}/>
 
         {isCamera && <CameraControls makeDefault minZoom={50} dollyToCursor/>}
-        {/*<Input scale={2} position={[0.4, 0.25, -1]} />*/}
-        {/*<Gd/>*/}
         <Environment background preset="night" blur={0.7}/>
         <EffectComposer>
           <Bloom mipmapBlur intensity={1} opacity={0.3} luminanceThreshold={0.5}/>
