@@ -19,6 +19,7 @@
     "@react-three/fiber": "8.13.0",
     "@react-three/postprocessing": "2.7.1",
     "@types/three": "0.152.1",
+    "@vercel/analytics": "^1.1.1",
     "framer-motion": "^10.16.4",
     "lamina": "^1.1.23",
     "leva": "0.9.29",
